@@ -1,0 +1,8 @@
+vars:
+  stage: prod
+
+components:
+  terraform:
+    dummy:
+      vars:
+        seed: prod

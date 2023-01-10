@@ -1,0 +1,23 @@
+vars:
+  namespace: cp
+
+terraform:
+  vars: {}
+
+  backend_type: s3
+  backend:
+    s3:
+      encrypt: true
+      bucket: "demo-terraform-plan-storage"
+      key: "terraform.tfstate"
+      dynamodb_table: "demo-terraform-plan-storage-lock"
+      acl: "bucket-owner-full-control"
+      region: "us-east-1"
+      role_arn: null
+
+helmfile:
+  vars: {}
+
+components:
+  terraform: {}
+  helmfile: {}
