@@ -20,9 +20,6 @@ jobs:
         id: transform
         run: |
           affected=${{ steps.affected.outputs.stdout }}
-          affected="${affected//'%'/'%25'}"
-          affected="${affected//$'\n'/'%0A'}"
-          affected="${affected//$'\r'/'%0D'}"
     outputs:
       affected: ${{ steps.transform.outputs.affected }}
 
