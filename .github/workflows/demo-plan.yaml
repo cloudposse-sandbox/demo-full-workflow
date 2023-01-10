@@ -15,9 +15,14 @@ jobs:
       - name: atmos affected stacks
         id: affected
         run: |
-          atmos describe affected | jq -r '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]'
+          atmos describe affected
+      - name: transform affected output
+        id: transform
+        run: |
+          json=$(echo ${{ steps.affected.outputs.stdout }} | jq -r '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]')
+          echo "affected=${json}" >> $GITHUB_OUTPUT
     outputs:
-      affected: ${{ steps.affected.outputs.stdout }}
+      affected: ${{ steps.transform.outputs.affected }}
 
   atmos-plan:
     runs-on: ubuntu-latest
