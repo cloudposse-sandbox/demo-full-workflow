@@ -6,4 +6,4 @@ components:
   terraform:
     dummy:
       vars:
-        seed: prod
+        seed: prod1
