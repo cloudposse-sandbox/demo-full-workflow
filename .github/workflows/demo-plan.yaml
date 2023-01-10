@@ -18,6 +18,7 @@ jobs:
           atmos describe affected
       - name: transform affected output
         id: transform
+        shell: bash
         run: |
           echo "${{ steps.affected.outputs.stdout }}" > affected.json
           affected=$(cat affected.json | jq -c '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, affected: (.stack + "-" + .component)}]')
