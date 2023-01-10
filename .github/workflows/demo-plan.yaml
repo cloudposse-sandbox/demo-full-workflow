@@ -19,7 +19,10 @@ jobs:
       - name: transform affected output
         id: transform
         run: |
-          affected=`echo ${{ steps.affected.outputs.stdout }}| jq -c`
+          affected=`echo ${{ steps.affected.outputs.stdout }}`
+          affected="${affected//'%'/'%25'}"
+          affected="${affected//$'\n'/'%0A'}"
+          affected="${affected//$'\r'/'%0D'}"
           #jq --argjson j "${{ steps.affected.outputs.stdout }}" -r '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]')
           #echo "affected=$json" >> $GITHUB_OUTPUT
           #echo "affected=$affected" >> $GITHUB_OUTPUT
