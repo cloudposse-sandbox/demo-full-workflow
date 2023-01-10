@@ -6,14 +6,42 @@ on:
     branches:
       - main
 jobs:
-  tf-plan:
+  atmos-affected:
     runs-on: ubuntu-latest
     steps:
-      #- uses: actions/checkout@v3
-      # with:
-      #   repository: ${{ github.event.pull_request.head.repo.full_name }}
-      #   ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
-      - run: |
-          atmos 
+      - name: atmos affected stacks
+        id: affected
+        run: |
+          atmos describe affected | jq -r '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]'
+    outputs:
+      affected: ${{ steps.affected.outputs.stdout }}
+
+  atmos-plan:
+    runs-on: ubuntu-latest
+    needs:
+      - atmos-affected
+    strategy:
+      matrix:
+        stack: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: cloudposse/github-action-setup-atmos@v1.0.0
+      - id: atmos-plan
+        run: |
+          atmos terraform plan ${{ matrix.full_stack_name }} -out=${{ matrix.full_stack_name }}-${{github.sha}}.planfile
+      - uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
+        id: store-plan
+        with:
+          action: storePlan
+          planPath: ${{ matrix.full_stack_name }}-${{github.sha}}.planfile
+          component: ${{ matrix.component }}
+          stack: ${{ matrix.stack }}
+          tableName: demo-terraform-plan-storage
+          bucketName: demo-terraform-plan-storage
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
+          AWS_REGION: us-east-1
