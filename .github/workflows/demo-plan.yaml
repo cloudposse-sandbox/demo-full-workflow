@@ -19,7 +19,7 @@ jobs:
       - name: transform affected output
         id: transform
         run: |
-          echo ${{ steps.affected.outputs.stdout }} > affected.json
+          echo "${{ steps.affected.outputs.stdout }}" > affected.json
           affected=$(cat affected.json | jq -c '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, affected: (.stack + "-" + .component)}]')
           echo "affected=$affected" >> $GITHUB_OUTPUT
           rm -rf affected.json
