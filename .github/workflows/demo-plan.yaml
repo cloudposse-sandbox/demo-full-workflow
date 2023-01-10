@@ -19,8 +19,9 @@ jobs:
       - name: transform affected output
         id: transform
         run: |
-          json=$(echo ${{ steps.affected.outputs.stdout }} | jq -r '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]')
-          echo "affected=${json}" >> $GITHUB_OUTPUT
+          affected=$(echo ${{ steps.affected.outputs.stdout }} | tr -d '\n')
+          json=$(echo $affected | jq -r '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]')
+          echo "affected=$json" >> $GITHUB_OUTPUT
     outputs:
       affected: ${{ steps.transform.outputs.affected }}
 
