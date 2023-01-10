@@ -1,5 +1,6 @@
 vars:
   stage: stage
+  environment: ue1
 
 components:
   terraform:
