@@ -20,6 +20,7 @@ jobs:
         id: transform
         run: |
           echo "${{ steps.affected.outputs.stdout }}" > affected.json
+          affected=$(cat affected.json | jq -c '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, affected: (.stack + "-" + .component)}]')
 
   atmos-plan:
     runs-on: ubuntu-latest
