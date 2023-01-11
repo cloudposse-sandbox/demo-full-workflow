@@ -40,6 +40,8 @@ jobs:
       - id: atmos-plan
         run: |
           atmos terraform plan ${{ matrix.component }} -s ${{ matrix.stack }} -out=${{ matrix.full_stack_name }}-${{github.sha}}.planfile
+          pwd
+          ls -latr
       - uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
         id: store-plan
         with:
