@@ -39,7 +39,7 @@ jobs:
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
       - id: atmos-plan
         run: |
-          atmos terraform plan ${{ matrix.component }} -s ${{ matrix.stack }} -out=${{ matrix.full_stack_name }}-${{github.sha}}.planfile
+          atmos terraform plan ${{ matrix.component }} -s ${{ matrix.stack }} -out=./${{ matrix.full_stack_name }}-${{github.sha}}.planfile
           pwd
           ls -latr
       - uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
