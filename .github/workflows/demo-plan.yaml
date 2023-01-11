@@ -30,8 +30,7 @@ jobs:
     needs:
       - atmos-affected
     strategy:
-      matrix:
-        stack: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
+      matrix: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
