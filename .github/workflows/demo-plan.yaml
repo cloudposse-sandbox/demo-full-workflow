@@ -30,8 +30,10 @@ jobs:
     needs:
       - atmos-affected
     strategy:
-      matrix: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
+      matrix:
+        affected: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
     steps:
+      - run: echo ${{ matrix}}
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
@@ -42,8 +44,8 @@ jobs:
         id: store-plan
         with:
           action: storePlan
-          planPath: ${{ matrix.full_stack_name }}-${{github.sha}}.planfile
-          component: ${{ matrix.component }}
+          planPath: ${{ matrix.affected.full_stack_name }}-${{github.sha}}.planfile
+          component: ${{ matrix.affected.component }}
           stack: ${{ matrix.stack }}
           tableName: demo-terraform-plan-storage
           bucketName: demo-terraform-plan-storage
