@@ -23,7 +23,7 @@ jobs:
         id: transform
         shell: bash
         run: |
-          affected=$(jq -c '{include:[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]}' < $(echo affected.json))
+          affected=$(jq -c '{include: {[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]}' < $(echo affected.json))
           echo "affected=$affected" >> $GITHUB_OUTPUT
 
   atmos-plan:
@@ -31,10 +31,9 @@ jobs:
     needs:
       - atmos-affected
     strategy:
-      matrix:
-        affected: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
+      matrix: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
+    name: atmos plan ${{ matrix.affected.full_stack_name }}
     steps:
-      - run: echo ${{ fromJson(matrix.affected) }}
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
