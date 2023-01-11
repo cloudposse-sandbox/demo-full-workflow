@@ -1,5 +1,5 @@
-name: 👽 Atmos GHA Demo
-run-name: 👽 Atmos GHA Demo
+name: 👽 Atmos GHA Plan Demo
+run-name: 👽 Atmos GHA Plan Demo
 on:
   workflow_dispatch:
   pull_request:
@@ -8,6 +8,8 @@ on:
 jobs:
   atmos-affected:
     runs-on: ubuntu-latest
+    outputs:
+      affected: ${{ steps.transform.outputs.affected }}
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
@@ -15,13 +17,13 @@ jobs:
       - name: atmos affected stacks
         id: affected
         run: |
-          atmos describe affected
+          atmos describe affected --file affected.json
       - name: transform affected output
         id: transform
         shell: bash
         run: |
-          echo "${{ steps.affected.outputs.stdout }}" > affected.json
           affected=$(jq -c '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, affected: (.stack + "-" + .component)}]' < $(echo affected.json))
+          echo "affected=$affected" >> $GITHUB_OUTPUT
 
   atmos-plan:
     runs-on: ubuntu-latest
