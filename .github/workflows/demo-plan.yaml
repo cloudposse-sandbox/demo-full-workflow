@@ -23,7 +23,7 @@ jobs:
         id: transform
         shell: bash
         run: |
-          affected=$(jq -c '[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]' < $(echo affected.json))
+          affected=$(jq -c '{include:[.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]}' < $(echo affected.json))
           echo "affected=$affected" >> $GITHUB_OUTPUT
 
   atmos-plan:
