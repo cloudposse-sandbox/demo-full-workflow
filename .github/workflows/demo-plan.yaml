@@ -34,7 +34,7 @@ jobs:
       matrix:
         affected: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
     steps:
-      - run: echo ${{ matrix.affected }}
+      - run: echo ${{ fromJson(matrix.affected) }}
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
