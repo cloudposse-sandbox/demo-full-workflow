@@ -1,3 +1,6 @@
+import:
+  - orgs/demo/_defaults
+
 vars:
   stage: dev
   environment: ue1

@@ -2,6 +2,15 @@ vars:
   namespace: cp
 
 terraform:
+  settings:
+    github:
+      wait_timer: 30
+      reviewers:
+        - type: "Team"
+          id: 6666083
+      deployment_branch_policy:
+        protected_branches: false
+        custom_branch_policies: true
   vars: {}
 
   backend_type: s3
