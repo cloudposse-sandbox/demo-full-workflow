@@ -60,9 +60,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: create or update deployment environment
+        shell: bash
         run: |
-          payload=$(atmos describe stacks ${{ matrix.component }} -s ${{ matrix.stack }} --sections=settings --format json \ 
-            | jq -c 'keys[] as $k | .[$k].components.terraform | keys[] as $c | .[$c].settings.github')
+          payload=$(atmos describe stacks ${{ matrix.component }} -s ${{ matrix.stack }} --sections=settings --format json| jq -c 'keys[] as $k | .[$k].components.terraform | keys[] as $c | .[$c].settings.github')
 
           echo "$payload"
 
