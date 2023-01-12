@@ -37,12 +37,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
-      - id: atmos-plan
+
+      - name: atmos plan
+        id: atmos-plan
         run: |
           atmos terraform plan ${{ matrix.component }} -s ${{ matrix.stack }} -out=$(pwd)/${{ matrix.full_stack_name }}-${{github.sha}}.planfile
-          pwd
-          ls -latr
-      - uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
+
+      - name: store plan
+        uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
         id: store-plan
         with:
           action: storePlan
@@ -56,7 +58,8 @@ jobs:
           AWS_REGION: us-east-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: create or update deployment environment ${{ matrix.full_stack_name }}
+
+      - name: create or update deployment environment
         run: |
           payload=$(atmos describe stacks ${{ matrix.component }} -s ${{ matrix.stack }} --sections=settings --format json \ 
             | jq -c 'keys[] as $k | .[$k].components.terraform | keys[] as $c | .[$c].settings.github')
