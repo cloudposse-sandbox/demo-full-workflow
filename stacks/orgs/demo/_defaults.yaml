@@ -4,9 +4,9 @@ vars:
 terraform:
   settings:
     github:
-      wait_timer: 30
+      wait_timer: 0
       reviewers:
-        - type: "Team"
+        - type: Team
           id: 6666083
       deployment_branch_policy:
         protected_branches: false
