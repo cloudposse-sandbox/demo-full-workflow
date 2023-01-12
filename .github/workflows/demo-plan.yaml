@@ -69,9 +69,10 @@ jobs:
           echo "$payload"
 
           curl \
+            -sS \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{secrets.GITHUB_TOKEN}}"\
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://${{github.api_url}}/repos/${{github.repository}}/environments/${{matrix.full_stack_name}}" \
+            "${{github.api_url}}/repos/${{github.repository}}/environments/${{matrix.full_stack_name}}" \
           -d "$payload"
