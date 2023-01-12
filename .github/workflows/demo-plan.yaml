@@ -63,6 +63,9 @@ jobs:
         run: |
           payload=$(atmos describe stacks ${{ matrix.component }} -s ${{ matrix.stack }} --sections=settings --format json \ 
             | jq -c 'keys[] as $k | .[$k].components.terraform | keys[] as $c | .[$c].settings.github')
+
+          echo "$payload"
+
           curl \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
