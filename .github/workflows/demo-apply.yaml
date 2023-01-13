@@ -1,0 +1,60 @@
+name: 👽 Atmos GHA Apply Demo
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  atmos-affected:
+    name: determine affected stacks
+    runs-on: ubuntu-latest
+    outputs:
+      affected: ${{ steps.transform.outputs.affected }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: cloudposse/github-action-setup-atmos@v1.0.0
+      - name: atmos affected stacks
+        id: affected
+        run: |
+          atmos describe affected --file affected.json
+      - name: transform affected output
+        id: transform
+        shell: bash
+        run: |
+          affected=$(jq -c '{include: [.[] | select(.component_type == "terraform")| {stack: .stack, component: .component, full_stack_name: (.stack + "-" + .component)}]}' < $(echo affected.json))
+          echo "affected=$affected" >> $GITHUB_OUTPUT
+
+  atmos-apply:
+    runs-on: ubuntu-latest
+    needs:
+      - atmos-affected
+    strategy:
+      matrix: ${{ fromJson(needs.atmos-affected.outputs.affected) }}
+    name: atmos plan ${{ matrix.full_stack_name }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - uses: cloudposse/github-action-setup-atmos@v1.0.0
+        with:
+          install-wrapper: false
+
+      - name: store plan
+        uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
+        id: store-plan
+        with:
+          action: getPlan
+          planPath: ${{ matrix.full_stack_name }}-${{github.sha}}.planfile
+          component: ${{ matrix.component }}
+          stack: ${{ matrix.stack }}
+          tableName: demo-terraform-plan-storage
+          bucketName: demo-terraform-plan-storage
+        env:
+          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: atmos apply
+        id: atmos-apply
+        run: |
+          atmos terraform apply ${{ matrix.component }} -s ${{ matrix.stack }} --planfile $(pwd)/${{ matrix.full_stack_name }}-${{github.sha}}.planfile
