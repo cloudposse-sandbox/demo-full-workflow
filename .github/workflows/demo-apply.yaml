@@ -21,7 +21,7 @@ jobs:
       - name: atmos affected stacks
         id: affected
         run: |
-          atmos describe affected --file affected.json --sha ${{ github.event.before }}
+          atmos describe affected --file affected.json --sha $(git merge-base main main~1)
       - name: transform affected output
         id: transform
         shell: bash
