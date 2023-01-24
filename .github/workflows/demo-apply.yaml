@@ -49,9 +49,9 @@ jobs:
         with:
           install-wrapper: false
 
-      - name: store plan
+      - name: retreive plan
         uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
-        id: store-plan
+        id: retreive-plan
         with:
           action: getPlan
           planPath: ${{ matrix.full_stack_name }}-${{github.sha}}.planfile
