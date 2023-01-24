@@ -67,4 +67,6 @@ jobs:
       - name: atmos apply
         id: atmos-apply
         run: |
+          ls -latr $(pwd)/${{ matrix.full_stack_name }}-${{github.sha}}.planfile
+          cat $(pwd)/${{ matrix.full_stack_name }}-${{github.sha}}.planfile
           atmos terraform apply ${{ matrix.component }} -s ${{ matrix.stack }} --planfile $(pwd)/${{ matrix.full_stack_name }}-${{github.sha}}.planfile
