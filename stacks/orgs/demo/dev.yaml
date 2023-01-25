@@ -9,4 +9,4 @@ components:
   terraform:
     dummy:
       vars:
-        seed: dev23
+        seed: dev24
