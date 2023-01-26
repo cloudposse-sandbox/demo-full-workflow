@@ -9,4 +9,4 @@ components:
   terraform:
     dummy:
       vars:
-        seed: stage
+        seed: stage2
