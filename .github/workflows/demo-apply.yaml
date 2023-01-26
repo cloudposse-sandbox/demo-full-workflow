@@ -50,7 +50,7 @@ jobs:
           install-wrapper: false
 
       - name: retreive plan
-        uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
+        uses: cloudposse/github-action-terraform-plan-storage@1.0.0
         id: retreive-plan
         with:
           action: getPlan

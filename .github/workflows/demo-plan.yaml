@@ -50,7 +50,7 @@ jobs:
           atmos terraform plan ${{ matrix.component }} -s ${{ matrix.stack }} -out=$(pwd)/${{ matrix.full_stack_name }}-${{github.sha}}.planfile
 
       - name: store plan
-        uses: cloudposse/github-action-terraform-plan-storage@feature/initial-implementation
+        uses: cloudposse/github-action-terraform-plan-storage@1.0.0
         id: store-plan
         with:
           action: storePlan
