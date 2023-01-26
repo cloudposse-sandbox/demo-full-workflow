@@ -7,7 +7,9 @@ terraform:
       wait_timer: 0
       reviewers:
         - type: Team
-          id: team-1
+          id: 6666083
+        - type: Team
+          id: 6666085
       deployment_branch_policy:
         protected_branches: false
         custom_branch_policies: true
