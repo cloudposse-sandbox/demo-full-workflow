@@ -35,6 +35,7 @@ jobs:
     name: atmos plan ${{ matrix.full_stack_name }}
     if:
       github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    environment: ${{ matrix.full_stack_name }}
     runs-on: ubuntu-latest
     needs:
       - atmos-affected
