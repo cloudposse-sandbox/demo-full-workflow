@@ -1,6 +1,12 @@
 import:
   - orgs/demo/_defaults
 
+settings:
+  github:
+    reviewers:
+      - type: Team
+        id: 6968536
+
 vars:
   stage: prod
   environment: ue1
