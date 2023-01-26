@@ -1,6 +1,6 @@
 import:
   - orgs/demo/_defaults
-  
+
 vars:
   stage: prod
   environment: ue1
@@ -9,4 +9,4 @@ components:
   terraform:
     dummy:
       vars:
-        seed: prod1
+        seed: prod4
