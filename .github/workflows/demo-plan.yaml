@@ -41,6 +41,8 @@ jobs:
     name: atmos plan ${{ matrix.full_stack_name }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
         with:
