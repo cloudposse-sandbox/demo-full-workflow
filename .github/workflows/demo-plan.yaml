@@ -21,6 +21,8 @@ jobs:
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
       - name: atmos affected stacks
         id: affected
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           atmos describe affected --file affected.json
       - name: transform affected output
