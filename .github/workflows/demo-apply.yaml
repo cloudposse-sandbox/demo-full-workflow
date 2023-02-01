@@ -17,15 +17,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+          path: main
 
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
       - name: atmos affected stacks
         id: affected
         run: |
-          atmos describe affected --repo-path "$GITHUB_WORKSPACE" --file affected.json --sha $(git merge-base main main~1)
+          atmos describe affected --repo-path "$GITHUB_WORKSPACE/main" --file affected.json --sha $(git merge-base main main~1)
       - name: transform affected output
         id: transform
         shell: bash

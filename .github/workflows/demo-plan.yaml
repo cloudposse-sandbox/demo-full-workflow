@@ -18,8 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+          path: main
       - uses: hashicorp/setup-terraform@v2
       - uses: cloudposse/github-action-setup-atmos@v1.0.0
       - name: atmos affected stacks
@@ -27,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          atmos describe affected --file affected.json --verbose=true --repo-path "$GITHUB_WORKSPACE"
+          atmos describe affected --file affected.json --verbose=true --repo-path "$GITHUB_WORKSPACE/main"
       - name: transform affected output
         id: transform
         shell: bash
