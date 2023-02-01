@@ -28,7 +28,7 @@ jobs:
       - name: atmos affected stacks
         id: affected
         run: |
-          atmos describe affected --repo-path "$GITHUB_WORKSPACE/main" --file affected.json --sha $(git merge-base main main~1)
+          atmos describe affected --file affected.json --sha $(git merge-base main main~1) --repo-path "$GITHUB_WORKSPACE/main"
       - name: transform affected output
         id: transform
         shell: bash
